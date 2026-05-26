@@ -1,35 +1,38 @@
 "use client";
 import { useState } from "react";
 import MountItem from "@/components/MountItem";
+import { mounts as initialMounts } from "@/app/data/mounts";
+type Mount = {
+  name: string;
+  slug: string;
+  description: string;
+  obtain: string;
+}
 export default function Home(){
-  const [mounts, setMounts] = useState([
-    {
-        name: "Wings of Ruin",
-        description: "Calling to mind Valigarmanda, the dread creature dubbed the Skyruin, these magicked wings grant their wearer an aura of irrepressible might. Though they are said to manifest only for those who are worthy, the truth of their nature is shrouded in mystery.",
-        obtain: "Worqor Lar Dor (Extreme)"
-    },
-    {
-        name: "Chocobo",
-        description: "Chicken",
-        obtain: "Quest"
-    }
-  ]);
+  const [mounts, setMounts] = useState<Mount[]>(initialMounts);
   const [newMount, setNewMount] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingValue, setEditingValue] = useState("");
 
   {/* ADICIONAR MONTARIAS */}
   function handleAddMount() {
-        if (newMount.trim () === "" || mounts.some(m => m.name === newMount))return;
+        if (
+          newMount.trim() === "" ||
+          mounts.some((m) => m.name === newMount)
+        )
+        return;
+
+        const slug = newMount.toLowerCase().replace(/\s+/g, "-");
 
         setMounts([
-            ...mounts,
-            {
-                name: newMount,
-                description: "",
-                obtain: ""
-            }
-        ])
+          ...mounts,
+          {
+            name: newMount,
+            slug: slug,
+            description: "",
+            obtain: "",
+          },
+        ]);
         setNewMount("");
       }
 

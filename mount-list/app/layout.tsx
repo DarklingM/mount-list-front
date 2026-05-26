@@ -39,6 +39,7 @@ export default function RootLayout({
         }}>
           <Link href = "/">Home</Link>
           <Link href = "/mounts">Mount List</Link>
+          <Link href = "/details">Mount Details</Link>
         </nav>
 
         {/* CONTEUDO */}

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 
 type Props = {
     mount: {
@@ -27,6 +28,7 @@ export default function MountItem ({
     handleSaveEdit,
 }: Props) {
     const [isOpen, setIsOpen] = useState(false);
+    const slug = mount.name.toLowerCase().replace(/\s+/g, "-")
     return (
         <li className="
         flex flex-col items-start
@@ -66,7 +68,17 @@ export default function MountItem ({
                             </p>
                             <p className="mt-1">
                                 <strong>Obtain:</strong> 
-                                {mount.obtain || "N/A"}
+                                {mount.obtain ? (
+                                    <Link
+                                        href={`/details/${slug}`}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="text-blue-500 underline hover:text-blue-700"
+                                    >
+                                    {mount.obtain}
+                                    </Link>
+                                ) : (
+                                    "N/A"
+                                )}
                             </p>
 
                         <div className="flex gap-2 mt-2">
