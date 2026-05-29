@@ -2,7 +2,7 @@ import { mounts } from "@/app/data/mounts";
 
 export default function Detailspage ({params}: any){
     const mount = mounts.find(
-        (m) => m.slug === params.mountName
+        (m) => m.slug === params.slug
     );
 
     if(!mount) return <p>Mount not found</p>;

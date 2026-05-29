@@ -32,8 +32,42 @@ body {
   }  
 }
 
-.animete-fadeIn {
+.animate-fadeIn {
   opacity: 0;
   transform: translateY(10px);
   animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) skewX(-20deg);
+  }
+  100%{
+    transform: translateX(200%) skewX(-20deg);
+  }
+}
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after{
+  content: "";
+  postition: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+  120deg,
+  transparent,
+  rgba(255, 255, 255, 0.6)
+  transparent
+  );
+  animation: none;
+}
+
+.shine-effect:hover::after {
+  animation: shine 0.8s forwards;
 }

@@ -1,17 +1,18 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import type { Mount } from "@/types/Mount"
 
 type Props = {
-    mount: {
+    mount: Mount;
+    index: number;
+    editingIndex: number | null;
+    editingMount: {
         name: string;
         description: string;
         obtain: string;
-    };    
-    index: number;
-    editingIndex: number | null;
-    editingValue: string;
-    setEditingValue: (value: string) => void;
+    }| null;
+    setEditingMount: (value: any) => void;
     handleEditMount: (index: number) => void;
     handleRemoveMount: (index: number) => void;
     handleSaveEdit: () => void;
@@ -21,32 +22,72 @@ export default function MountItem ({
     mount,
     index,
     editingIndex,
-    editingValue,
-    setEditingValue,
+    editingMount,
+    setEditingMount,
     handleEditMount,
     handleRemoveMount,
     handleSaveEdit,
 }: Props) {
     const [isOpen, setIsOpen] = useState(false);
-    const slug = mount.name.toLowerCase().replace(/\s+/g, "-")
+    const slug = mount.name.toLowerCase().replace(/\s+/g, "-");
     return (
         <li className="
-        flex flex-col items-start
-        p-4 mb-3
-        border rounded-lg
-        bg-white
-        text-zinc-900
-        shadow
-        animate-fadeIn
+            p-4
+            rounded-xl
+            bg-gradient-to-br from-zinc-8200 to-yellow-900
+            border border-yellow-500/10
+            border-1-4 border-l-yellow-500
+            shadow
+            text-white
+            transition
+            hover:border-yellow-500/40
+            my-2
         ">
             {editingIndex === index ? (
                 <>
                     <input
-                        value = {editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
+                        value = {editingMount?.name || ""}
+                        onChange={(e) => setEditingMount({
+                            ...editingMount!,
+                            name: e.target.value
+                        })
+                    }
+                    className="w-full p-2 rounded bg-zinc-700 border border-zinc-600 text-white"
+                    />
+                    <textarea
+                        value={editingMount?.description || ""}
+                        onChange={(e) =>
+                            setEditingMount({
+                                ...editingMount!,
+                                description: e.target.value
+                            })
+                        }
+                        className="w-full p-2 rounded -bg-zinc-700 border border-zinc-600 text-white h-24 my-2"
+                    />
+                    <input
+                        value = {editingMount?.obtain || ""}
+                        onChange={(e) =>
+                            setEditingMount({
+                                ...editingMount!,
+                                obtain: e.target.value
+                            })
+                        }
+                        className="w-full p-2 rounded bg-zinc-700 border border-zinc-600 text-white"
                     />
 
-                    <button onClick={handleSaveEdit}>Salvar</button>
+                    <button 
+                    onClick={handleSaveEdit}
+                    className="
+                    mt-2
+                    px-4
+                    py-2
+                    rounded
+                    bg-blue-500
+                    text-white
+                    hover:bg-blue-600
+                    transition
+                    shadow"
+                    >Salvar</button>
                 </>
             ) : (
                 <>
@@ -61,18 +102,22 @@ export default function MountItem ({
                     </span>
 
                     {isOpen && ( 
-                        <div style={{ marginTop: "10px"}}>
+                        <div className="mt-3 space-y-2 text-sm text-zinc-300">
                             <p className="mt-1">
-                                <strong>Description:</strong>
+                                <span className="font-semibold text-white">
+                                    Description:
+                                </span><br />
                                 {mount.description || "N/A"}
                             </p>
                             <p className="mt-1">
-                                <strong>Obtain:</strong> 
+                                <span className="font-semibold text-white">
+                                    Obtain:
+                                </span>{""}
                                 {mount.obtain ? (
                                     <Link
-                                        href={`/details/${slug}`}
+                                        href={`/obtain/${mount.obtain.toLocaleLowerCase().replace(/\s+/g, "-")}`}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="text-blue-500 underline hover:text-blue-700"
+                                        className="text-yellow-400 hover:underline"
                                     >
                                     {mount.obtain}
                                     </Link>
@@ -84,36 +129,37 @@ export default function MountItem ({
                         <div className="flex gap-2 mt-2">
                             <button onClick={() => handleEditMount(index)}
                                 className="
-                                px-3
-                                py-1
-                                rounded
-                                bg-green-700
-                                text-white
-                                hover:opacity-80
-                                transition
+                                    px-3 py-1
+                                    rounded-md
+                                    bg-green-700
+                                    text-white
+                                    text-sm
+                                    hover:bg-green-500
+                                    transition
                                 "
 
                                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
                                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
                             >
-                                Editar
+                                Edit
                             </button>
 
                             <button onClick={() => handleRemoveMount(index)}
                                 className="
-                                px-3
-                                py-1
-                                rounded
-                                bg-green-700
-                                text-white
-                                hover:opacity-80
-                                transition
+                                    px-3 py-1
+                                    rounded-md
+                                    bg-red-600
+                                    text-white
+                                    text-sm
+                                    hover:bg-red-500
+                                    transition
                                 "
 
                                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-                                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                            >
+                                onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}>
+
                                 Deletar
+
                             </button>
                         </div>
                         </div>
