@@ -2,17 +2,13 @@
 import { useState } from "react";
 import MountItem from "@/components/MountItem";
 import { mounts as initialMounts } from "@/app/data/mounts";
-type Mount = {
-  name: string;
-  slug: string;
-  description: string;
-  obtain: string;
-}
+import type{ Mount } from "@/types/Mount"
+
 export default function Home(){
   const [mounts, setMounts] = useState<Mount[]>(initialMounts);
   const [newMount, setNewMount] = useState("");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [editingValue, setEditingValue] = useState("");
+  const [editingMount, setEditingMount] = useState<Mount | null>(null);
 
   {/* ADICIONAR MONTARIAS */}
   function handleAddMount() {
@@ -45,62 +41,70 @@ export default function Home(){
   {/* EDITAR MONTARIAS */}
   function handleEditMount(index: number) {
     setEditingIndex(index);
-    setEditingValue(mounts[index].name);
+    setEditingMount({...mounts[index]});
   }
 
   {/* SALVAR EDIÇÃO */}
   function handleSaveEdit() {
-    if (editingValue.trim() === "")return;
+    if (!editingMount)return;
 
     const updatedMounts = [...mounts];
-    updatedMounts[editingIndex!] = {
-        ...updatedMounts[editingIndex!],
-        name: editingValue
-    };
+    updatedMounts[editingIndex!] = editingMount;
+    
     setMounts(updatedMounts);
     setEditingIndex(null);
-    setEditingValue("");
+    setEditingMount(null);
   }
 
   return (
-    <div style={{
-      maxWidth: "500px",
-      margin: "0 auto",
-      padding: "20px"
-    }}>
-
-      <h1 style ={{ marginBottom: "20px"}}>
+    <div className="
+    min-h-screen
+    bg-gradient-to-b from-zinc-900 to-black
+    text-white
+    px-6 py-10
+    ">
+      <div className="mx-w-2xl mx-auto">
+      <h1 className="
+      text-4xl font-bold mb-6
+      text-yellow-400
+      tracking-wide
+      ">
         Mount List
       </h1>
 
 
-    <div className="max-w-xl mx-auto p-5">
+    <div className="flex gap-2 mb-6">
       <input
         value = {newMount}
         onChange = {(e) => setNewMount(e.target.value)}
-        placeholder = "Nome da mount"
+        placeholder = "Mount name"
         className="
-        flax-1
-        p-2
-        border
-        border-gray-400
-        rounded
+          flex-1
+          p-3
+          rounded-lg
+          bg-zinc-800
+          border border-zinc-600
+          text-white
+          placeholder:text-zinc-400
+          focus:outline-none
+          focus:border-yellow-400
         "/>
 
       <button onClick = {handleAddMount}
       className="
-      px-3
-      py-2
-      cursor-pointer
-      bg-blue--500
-      text-white
-      rounded
-      hover:bg-blue-600
-      "
-      >
+        shine-effect
+        px-4 py-3
+        bg-yellow-500
+        text-black
+        font-semibold
+        rounded-lg
+        hover:bg-yellow-400
+        transition
+        shadow
+      ">
         Adicionar Montaria
       </button>
-
+      </div>
     </div>
 
     <ul style={{ listStyle: "none", padding: 0}}>
@@ -110,8 +114,8 @@ export default function Home(){
           mount={mount}
           index={index}
           editingIndex={editingIndex}
-          editingValue={editingValue}
-          setEditingValue={setEditingValue}
+          editingMount={editingMount}
+          setEditingMount={setEditingMount}
           handleEditMount={handleEditMount}
           handleRemoveMount={handleRemoveMount}
           handleSaveEdit={handleSaveEdit}
